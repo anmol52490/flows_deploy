@@ -1,0 +1,33 @@
+trend_analysis_task:
+  description: >
+    Analyze the cleaned LinkedIn posts:
+        - Identify user's writing style.
+        - Detect the user's personal touch.
+        - Understand the user's targeted audience.
+        from
+         "{activities}"
+                              
+  expected_output: >
+    JSON structure containing theme, writing style and interests of user. from {activities}
+  agent: trend_analysis_agent
+  output_file: output/post_analysis.json
+
+post_generation_task:
+  description: >
+    Generate **One highly personalized LinkedIn post** based solely on the following dynamic inputs and the provided content theme.
+
+                🔹 **Dynamic Inputs:**
+                - **Writing Style:** The user prefers the post to be written in the style of **"{writing_style}"**.
+                - **Personal Touch:** Incorporate a personal touch that reflects the user's unique perspective: **"{personal_touch}"**.
+                - **Target Audience:** The post should be tailored to **"{target_audience}"**.
+                - **Content Idea:** The content theme will be provided in **"{static_linkedin_post}"**.
+
+                🔹 **Content Guidelines:**
+                - The post must include **#hidevs** as a hashtag along with other relevant hashtags.
+                - **The post must be engaging and relevant**, focusing on the provided content idea without any additional constraints.
+
+  
+  expected_output: >
+    1 LinkedIn-ready post formatted for engagement according to the user's preferences.
+  agent: post_generation_agent
+  output_file: output/generated_posts.json
