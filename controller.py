@@ -70,7 +70,8 @@ class LinkedinPostFlow(Flow[LinkedInState]):
             "writing_style": result["writing_style"],
             "personal_touch": result["personal_touch"],
             "target_audience": result["target_audience"],
-            "post_length": result["post_length"]
+            "post_length": result["post_length"],
+            "paragraph": result["paragraph"]
         }
 
     @listen(analysis_phase)

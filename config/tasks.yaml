@@ -5,6 +5,7 @@ trend_analysis_task:
         - Detect the user's personal touch.
         - Understand the user's targeted audience.
         - Identify user's linkedin post length on average.
+        - Paragraphing and formatting for LinkedIn.
         from
          "{activities}"
                               
@@ -22,12 +23,12 @@ post_generation_task:
                 - **Personal Touch:** Incorporate a personal touch that reflects the user's unique perspective: **"{personal_touch}"**.
                 - **Target Audience:** The post should be tailored to **"{target_audience}"**.
                 - **Post content length:** The average post length is **"{post_length}"**.
+                - **User's Paragraphing and formatting:** The post should be properly paragraphed and formatted like **"{paragraph}"**.
                 - **Content Idea:** The content theme will be provided in **"{static_linkedin_post}"**.
 
                 🔹 **Content Guidelines:**
                 - The post must not contain any emojis.
                 - The post must include **#hidevs** as a hashtag along with other relevant hashtags.
-                - Properly paragraphed and formatted for LinkedIn.
                 - The post should be written in English.
                 - **The post must be engaging and relevant**, focusing on the provided content idea without any additional constraints.
 

@@ -14,6 +14,7 @@ class LinkedInPostAnalysis(BaseModel):
     personal_touch: str = Field(..., description="Personal touch in the post")
     target_audience: str = Field(..., description="Target audience for the post")
     post_length: str = Field(..., description="Length of the user post user prefers while posting")
+    paragraph: str = Field(..., description="Paragraphing and formating of the post")
 
 class Post(BaseModel):
     post_heading: str
@@ -27,6 +28,7 @@ class AnalysedPostKeys(str, Enum):
     PERSONAL_TOUCH = "personal_touch"
     TARGET_AUDIENCE = "target_audience"
     POST_LENGTH = "post_length"
+    PARAGRAPHS = "paragraph"
 
 class GeneratedPostKeys(str, Enum):
     POST_HEADING = "post_heading"
