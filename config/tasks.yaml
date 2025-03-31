@@ -37,3 +37,51 @@ post_generation_task:
     1 LinkedIn-ready post formatted for engagement according to the user's preferences.
   agent: post_generation_agent
   output_file: output/generated_posts.json
+
+
+post_enhancement_task:
+  description: >
+    Please incorporate the following feedback if present: 
+    {feedback}
+    Enhance the provided post content while strictly adhering to:
+    - Exact length requirement: {length} words
+    - Mandatory keyword inclusion: {keywords}
+    - Consistent {tone} tone throughout
+    - Preservation of core message from original post
+    - The post must include **#hidevs** as a hashtag along with other relevant hashtags.
+    Original Content:
+    {post}
+    
+    Rules:
+    - Never change the fundamental argument/point
+    - Inject keywords naturally, never force them
+    - Adjust length by expanding/compressing examples, not cutting core ideas
+  expected_output: >
+    A single enhanced LinkedIn post meeting all specified requirements,
+    returned as JSON with post_heading and post_content fields
+  agent: linkedin_post_enhancer
+  output_file: output/enhanced_post.json
+
+post_validation_task:
+  description: >
+    Rigorously validate the enhanced post against these criteria:
+    - Exact word count: {length} (±5% tolerance)
+    - All keywords present: {keywords}
+    - Tone consistency: {tone}
+    - Readability score > 70
+    - Core message preservation
+    - Formatting: Proper paragraphing and structure for LinkedIn
+    - No spelling or grammatical errors
+    - No emojis or informal language
+    - The post must include **#hidevs** as a hashtag along with other relevant hashtags.
+    
+    Linkedin Post to verify :
+    {post}
+  expected_output: >
+    JSON structure with validation results:
+    {
+      "valid": boolean,
+      "feedback": "Detailed improvement suggestions"
+    }
+  agent: post_validator
+  output_file: output/validation.json

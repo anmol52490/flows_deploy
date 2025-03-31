@@ -3,8 +3,8 @@ import json
 import requests
 import logging
 from crewai import Agent, Task, Crew, Process, LLM
-from crewai.flow import Flow, listen, start
-from models import LinkedInPostRequest, LinkedInPostAnalysis, LinkedInPostGeneration, LinkedInState
+from crewai.flow import Flow, listen, start, router
+from models import LinkedInPostRequest, LinkedInPostAnalysis, LinkedInPostGeneration, LinkedInState, LinkedinCustomPostRequest,LinkedInPostFlowState,ValidationResult
 from utils import load_yaml_config, get_env, clean_text
 
 AGENTS = load_yaml_config("config/agents.yaml")
@@ -92,6 +92,75 @@ class LinkedinPostFlow(Flow[LinkedInState]):
             } for post in result["generated_posts"]
         ]
 
+
+class LinkedInCustomPostFlow(Flow[LinkedInPostFlowState]):
+    def __init__(self, request: LinkedinCustomPostRequest):
+        super().__init__(state=LinkedInPostFlowState())
+        self.llm = LLM(
+            model="gemini/gemini-2.0-flash-lite",
+            temperature=0.7,
+            api_key=get_env("GEMINI_API_KEY")
+        )
+        self.request = request
+        self.retry_count = 0
+
+    @start("retry")
+    def generate_linkedin_post(self):
+        """Generate LinkedIn post using CrewAI."""
+
+        print("Generating LinkedIn post...")
+        agent = Agent(**AGENTS["linkedin_post_enhancer"], llm=self.llm)
+        task = Task(config=TASKS["post_enhancement_task"], agent=agent, output_json=LinkedInPostGeneration)
+        crew = Crew(agents=[agent], tasks=[task], process=Process.sequential, verbose=True)
+        result = crew.kickoff(
+            inputs={
+                "feedback": self.state.feedback or "No feedback yet",
+                "length": self.request.length,
+                "keywords": self.request.keywords,
+                "tone": self.request.tone,
+                "post": self.request.post,
+            }
+        )
+        self.state.generated_post = result["generated_posts"]
+
+    @router(generate_linkedin_post)
+    def evaluate_linkedin_Post(self):
+        """Evaluate the generated LinkedIn post."""
+        if self.retry_count > 1:
+            return "max_retry_exceeded"
+
+        try:
+            agent = Agent(**AGENTS["post_validator"], llm=self.llm)
+            task = Task(config=TASKS["post_validation_task"], agent=agent, output_json=ValidationResult)
+            crew = Crew(agents=[agent], tasks=[task], process=Process.sequential, verbose=True)
+            result = crew.kickoff(
+                inputs={
+                    "length": self.request.length,
+                    "keywords": self.request.keywords,
+                    "tone": self.request.tone,
+                    "post": self.state.generated_post,
+                }
+            )
+
+            self.state.valid = result["valid"]
+            self.state.feedback = result["feedback"]
+
+        except Exception as e:
+            self.state.valid = False
+            self.state.feedback = f"Evaluation error: {str(e)}"
+
+        self.retry_count += 1
+        return "completed" if self.state.valid else "retry"
+
+    @listen("completed")
+    def save_result(self):
+        pass
+
+    @listen("max_retry_exceeded")
+    def max_retry_exceeded_exit(self):
+        """Handle the case when max retry count is exceeded."""
+        pass
+
 class PostController:
     def execute_flow(self, request: LinkedInPostRequest):
         try:
@@ -100,6 +169,19 @@ class PostController:
             flow.kickoff()
             if not flow.state.generated_post:
                 raise ValueError("Post generation failed")
+
+            return flow.state.generated_post
+        except Exception as e:
+            logger.error(f"Flow execution failed: {e}", exc_info=True)
+            raise
+
+    def custom_post(self, request: LinkedinCustomPostRequest):
+        try:
+            
+            flow = LinkedInCustomPostFlow(request)
+            print(123456)
+            flow.kickoff()
+            
 
             return flow.state.generated_post
         except Exception as e:

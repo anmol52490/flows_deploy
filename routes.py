@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from controller import PostController
-from models import LinkedInPostRequest, LinkedInPostResponse
+from models import LinkedInPostRequest, LinkedInPostResponse,LinkedinCustomPostRequest
 import logging
 import signal
 import sys
@@ -26,3 +26,9 @@ def generate_posts(request: LinkedInPostRequest):
     except Exception as e:
         logger.critical(f"Critical error: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))
+    
+
+@app.post("/custom_generate", response_model=LinkedInPostResponse)
+def custom_generate_posts(request: LinkedinCustomPostRequest):
+    custom_posts =controller.custom_post(request)
+    return LinkedInPostResponse(posts=custom_posts)

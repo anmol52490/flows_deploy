@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List, Dict, Optional
 from pydantic import BaseModel, Field, HttpUrl
 from enum import Enum
 
@@ -37,3 +37,19 @@ class GeneratedPostKeys(str, Enum):
 class LinkedInState(BaseModel):
     analysed_post: Dict[AnalysedPostKeys, str] = Field(default_factory=dict)
     generated_post: List[Dict[GeneratedPostKeys, str]] = Field(default_factory=list)
+
+class LinkedinCustomPostRequest(BaseModel):
+    length: int = Field(..., description="Length of the post in number of words")
+    keywords: List[str] = Field(..., description="Keywords to include in the post")
+    tone: str = Field(..., description="Tone of the post")
+    post: str = Field(..., description="Content of the post")
+
+class LinkedInPostFlowState(BaseModel):
+    linkedin_post: str = ""
+    feedback: Optional[str] = None
+    valid: bool = False
+    generated_post: List[Dict[GeneratedPostKeys, str]] = Field(default_factory=list)
+
+class ValidationResult(BaseModel):
+    valid: bool
+    feedback: Optional[str] = None
