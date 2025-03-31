@@ -2,24 +2,10 @@ import os
 import yaml
 import re
 from dotenv import load_dotenv
-from typing import Dict, Any, Type
-from crewai.tools import BaseTool
-from pydantic import BaseModel, Field
-
-class CharacterCounterInput(BaseModel):
-    text: str = Field(..., description="The string to count characters in.")
-
-class CharacterCounterTool(BaseTool):
-    name: str = "Character Counter Tool"
-    description: str = "Counts the number of characters in a given string."
-    args_schema: Type[BaseModel] = CharacterCounterInput
-
-    def _run(self, text: str) -> str:
-        return f"The input string has {len(text)} characters."
 
 load_dotenv()
 
-def load_yaml_config(path: str) -> Dict[str, Any]:
+def load_yaml_config(path: str):
     with open(path, 'r', encoding='utf-8') as f:
         return yaml.safe_load(f)
 
