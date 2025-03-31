@@ -12,7 +12,7 @@ trend_analysis_task:
   expected_output: >
     JSON structure containing theme, writing style and interests of user. from {activities}
   agent: trend_analysis_agent
-  output_file: output/post_analysis.json
+
 
 post_generation_task:
   description: >
@@ -36,7 +36,7 @@ post_generation_task:
   expected_output: >
     1 LinkedIn-ready post formatted for engagement according to the user's preferences.
   agent: post_generation_agent
-  output_file: output/generated_posts.json
+
 
 
 post_enhancement_task:
@@ -60,7 +60,7 @@ post_enhancement_task:
     A single enhanced LinkedIn post meeting all specified requirements,
     returned as JSON with post_heading and post_content fields
   agent: linkedin_post_enhancer
-  output_file: output/enhanced_post.json
+
 
 post_validation_task:
   description: >
@@ -84,4 +84,4 @@ post_validation_task:
       "feedback": "Detailed improvement suggestions"
     }
   agent: post_validator
-  output_file: output/validation.json
+
