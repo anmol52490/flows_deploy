@@ -13,7 +13,7 @@ class LinkedInPostAnalysis(BaseModel):
     writing_style: str = Field(..., description="Detected writing style")
     personal_touch: str = Field(..., description="Personal touch in the post")
     target_audience: str = Field(..., description="Target audience for the post")
-    emoji: str = Field(..., description="Emoji used in the post")
+    post_length: str = Field(..., description="Length of the user post user prefers while posting")
 
 class Post(BaseModel):
     post_heading: str
@@ -26,7 +26,7 @@ class AnalysedPostKeys(str, Enum):
     WRITING_STYLE = "writing_style"
     PERSONAL_TOUCH = "personal_touch"
     TARGET_AUDIENCE = "target_audience"
-    EMOJI = "emoji"
+    POST_LENGTH = "post_length"
 
 class GeneratedPostKeys(str, Enum):
     POST_HEADING = "post_heading"
