@@ -1,5 +1,4 @@
 import re
-import json
 import requests
 import logging
 from crewai import Agent, Task, Crew, Process, LLM
@@ -118,7 +117,7 @@ class LinkedInCustomPostFlow(Flow[LinkedInPostFlowState]):
 
     @router(generate_linkedin_post)
     def evaluate_linkedin_Post(self):
-        if self.retry_count > 1:
+        if self.retry_count > 2:
             return "max_retry_exceeded"
 
         try:
