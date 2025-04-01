@@ -28,7 +28,7 @@ post_generation_task:
 
                 🔹 **Content Guidelines:**
                 - The post must not contain any emojis.
-                - The post must include **#hidevs** as a hashtag along with other relevant hashtags.
+                - The post must include **#HiDevs** as a hashtag along with other relevant hashtags.
                 - The post should be written in English.
                 - **The post must be engaging and relevant**, focusing on the provided content idea without any additional constraints.
 
@@ -48,7 +48,7 @@ post_enhancement_task:
     - Mandatory keyword inclusion: {keywords}
     - Consistent {tone} tone throughout
     - Preservation of core message from original post
-    - The post must include **#hidevs** as a hashtag along with other relevant hashtags.
+    - The post must include **#HiDevs** as a hashtag along with other relevant hashtags.
     Original Content:
     {post}
     
@@ -73,7 +73,7 @@ post_validation_task:
     - Formatting: Proper paragraphing and structure for LinkedIn
     - No spelling or grammatical errors
     - No emojis or informal language
-    - The post must include **#hidevs** as a hashtag along with other relevant hashtags.
+    - The post must include **#HiDevs** as a hashtag along with other relevant hashtags.
     
     Linkedin Post to verify :
     {post}
