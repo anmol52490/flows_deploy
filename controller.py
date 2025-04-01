@@ -93,7 +93,7 @@ class LinkedInCustomPostFlow(Flow[LinkedInPostFlowState]):
         super().__init__(state=LinkedInPostFlowState())
         self.llm = LLM(
             model="gemini/gemini-2.0-flash-lite",
-            temperature=0.7,
+            temperature=0.35,
             api_key=get_env("GEMINI_API_KEY")
         )
         self.request = request
