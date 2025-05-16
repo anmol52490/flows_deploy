@@ -5,7 +5,7 @@ from crewai import Agent, Task, Crew, Process, LLM
 from crewai.flow import Flow, listen, start, router
 from models import (
     LinkedInPostRequest, LinkedInPostAnalysis, LinkedInPostGeneration, LinkedInState,
-    LinkedinCustomPostRequest, LinkedInPostFlowState, ValidationResult
+    LinkedinCustomPostRequest, LinkedInPostFlowState, ValidationResult,RapidAPIRequest
 )
 from utils import load_yaml_config, get_env, clean_text
 
@@ -171,4 +171,24 @@ class PostController:
             return flow.state.generated_post
         except Exception as e:
             logger.error(f"Flow execution failed: {e}", exc_info=True)
+            raise
+    
+    def get_linkedin_profile_data(self, request: RapidAPIRequest):
+        try:
+            print(request.profile_url)
+            self.rapidapi_key = get_env("RAPIDAPI_KEY")
+            response = requests.get(
+                "https://linkedin-api8.p.rapidapi.com/get-profile-data-by-url",
+                headers={
+                    "x-rapidapi-key": self.rapidapi_key,
+                    "x-rapidapi-host": "linkedin-api8.p.rapidapi.com"
+                },
+                params={"url": request.profile_url}
+            )
+            if response.status_code != 200:
+                raise ConnectionError("Failed to fetch LinkedIn activities")
+            else:
+                return response.json()
+        except Exception as e:
+            logger.error(f"Error fetching LinkedIn profile data: {e}", exc_info=True)
             raise

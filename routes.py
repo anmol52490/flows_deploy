@@ -1,6 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from controller import PostController
-from models import LinkedInPostRequest, LinkedInPostResponse, LinkedinCustomPostRequest
+from models import LinkedInPostRequest, LinkedInPostResponse, LinkedinCustomPostRequest,RapidAPIResponse,RapidAPIRequest
 import logging
 
 logging.basicConfig(level=logging.INFO)
@@ -26,4 +26,13 @@ def custom_generate_posts(request: LinkedinCustomPostRequest):
         posts = controller.custom_post(request)
         return LinkedInPostResponse(posts=posts)
     except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/linkedin_profile_data",response_model=RapidAPIResponse)
+def get_linkedin_profile_data(request: RapidAPIRequest):
+    try:
+        data = controller.get_linkedin_profile_data(request)
+        return RapidAPIResponse(data=data)
+    except Exception as e:
+        logger.error(f"Error fetching LinkedIn profile data: {str(e)}", exc_info=True)
         raise HTTPException(status_code=500, detail=str(e))

@@ -1,7 +1,7 @@
 from typing import List, Dict, Optional
 from pydantic import BaseModel, Field, HttpUrl
 from enum import Enum
-
+from typing import Any
 class LinkedInPostRequest(BaseModel):
     profile_url: HttpUrl
     static_post: str
@@ -52,3 +52,9 @@ class LinkedInPostFlowState(BaseModel):
 class ValidationResult(BaseModel):
     valid: bool
     feedback: Optional[str]
+
+class RapidAPIResponse(BaseModel):
+    data: Dict[str, Any]
+
+class RapidAPIRequest(BaseModel):
+    profile_url: str
